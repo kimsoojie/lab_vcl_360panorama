@@ -24,7 +24,7 @@ def estimate_fov(im_dir, model_name, device):
     # load pretrained model
     model_path = os.path.join(opt.model_path, model_name + '.pt')
     model = torch.load(model_path)
-    net.load_state_dict(model, True)
+    net.load_state_dict(model, False)
 
     imglist = []
     for i in range(4):
@@ -33,7 +33,7 @@ def estimate_fov(im_dir, model_name, device):
 
     img_tensor = torch.cat([imglist[2], imglist[0], imglist[3], imglist[1]], dim=2)
     in_img = make_input_batch(img_tensor, device)
-    in_img = ops.downsample(in_img,2)
+    in_img = ops.downsample(in_img,1)#2
     _, fov_out = net(in_img)
     fov = torch.argmax(fov_out)
     fov_pred = fov.item() * 2
@@ -46,7 +46,7 @@ def estimate_fov(im_dir, model_name, device):
 
     img_horiz = np.hstack([imglist[2], imglist[0], imglist[3], imglist[1]])
     img_cat = np.vstack([np.zeros_like(img_horiz), img_horiz, np.zeros_like(img_horiz)])
-    img_cat = utl.numpy_to_pano(img_cat)
+    #img_cat = utl.numpy_to_pano(img_cat)
     outpath = os.path.join(im_dir, "img_out.jpg")
     cv2.imwrite(outpath, img_cat)
 
@@ -60,7 +60,7 @@ def write_output_single(folder_path, im_name, model_name, net_type=None):
 
     # Init input
     im_name_splt = im_name.split('.')
-    in_img = read_img_to_tensor('/var/www/html/img_out.jpg')
+    in_img = read_img_to_tensor('.\\img\\img_out.jpg')
     in_img = torch.unsqueeze(in_img, 0)
     in_img = in_img.to(device)
     in_img = ops.downsample(in_img)
@@ -68,7 +68,7 @@ def write_output_single(folder_path, im_name, model_name, net_type=None):
     out_s, out_m = generator(in_img)
 
     # torchvision.utils.save_image(out_m, '/var/www/html/' + im_name_splt[0] + '_m.png', normalize=True)
-    save_img_from_tensor(imdir + '/trained_output.jpg', out_m)
+    save_img_from_tensor(imdir + '\\trained_output.jpg', out_m)
     print("finished saving image", out_m.size())
 
 
@@ -96,8 +96,8 @@ def save_img_from_tensor(im_path, img_tensor):
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     cv2.imwrite(im_path, img.astype(np.uint8))
 
-imdir = '/var/www/html/'
-im_name = estimate_fov(imdir,'fov/model_fov2_fov_2000', device)
+imdir = '.\\img'
+im_name = estimate_fov(imdir,'fov\\model_fov2_fov_2000', device)
 write_output_single(imdir, "trained_input.jpg",
-                    model_name='model_190712/model_n_medium_30000',
+                    model_name='model_190712\\model_n_medium_30000',
                     net_type='medium')

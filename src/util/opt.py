@@ -22,28 +22,28 @@ class Options:
         self.train_batch = 2
         self.train_shuffle = True
         self.train_len = 39730
-        self.ckpt_path = '../ckpt'
+        self.ckpt_path = '.\\ckpt'
         # self.model_path = '../trained_model'
-        self.model_path = '/home/juliussurya/workspace/360pano2/trained_model'
+        self.model_path = '.\\trained_model'
         self.learn_rate = 0.0002
         self.lr_d = 0.0004
         self.lr_g = 0.0001
         self.beta1 = 0.5
         self.beta2 = 0.999
         self.total_epochs = 50
-        self.train_log = '../log'
+        self.train_log = '.\\log'
         self.print_step = 500
 
 
         # Test Param #
-        self.test_path = '/home/juliussurya/work/360dataset/pano_data_val'
+        self.test_path = '.\\pano_data_val'
         self.test_batch = 1
         self.test_shuffle = False
         self.test_len = 5000
-        self.output_path = '../output'
+        self.output_path = '.\\output'
 
         # Val param #
-        self.val_path = '/home/juliussurya/work/360dataset/pano_data_val'
+        self.val_path = '.\\pano_data_val'
         self.val_batch = 1
         self.val_shuffle = True
         self.val_len = 5000
