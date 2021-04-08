@@ -13,7 +13,7 @@ class Options:
         # Dataset
         # =====================
         self.workers = 0
-        self.equi_coord = '../data/pano_coord_1024.npy'
+        self.equi_coord = '.\\pano_coord_1024.npy'
         self.equi = True
 
         # Training Param #

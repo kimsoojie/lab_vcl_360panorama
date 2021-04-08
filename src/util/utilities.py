@@ -1,5 +1,5 @@
 from util.base import *
-from skimage.measure import compare_psnr, compare_mse, compare_ssim
+from skimage.measure import *
 
 def read_image_to_tensor(impath, scale=(1,1) ,normalize=True):
     im = cv2.imread(impath)
@@ -33,7 +33,7 @@ def imresize_pad(x, sz, pad):
 
 def numpy_to_pano(in_img, out_h=512, out_w=1024, in_len=256):
     out_img = np.zeros((out_h, out_w, 3), dtype=np.uint8)
-    coord = np.load('/home/juliussurya/workspace/360pano2/data/pano_coord_1024.npy')
+    coord = np.load('.\\pano_coord_1024.npy')
     # coord = np.load('/home/juliussurya/workspace/360pano2/data/pano_coord_512.npy')
 
     y = coord[:, :, 0]  # load the coordinate

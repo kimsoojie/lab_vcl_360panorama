@@ -31,10 +31,12 @@ def estimate_fov(im_dir, model_name, device):
         impath = os.path.join(im_dir, "img" + str(i) + ".jpg")
         imglist.append(read_img_to_tensor(impath))
 
-    img_tensor = torch.cat([imglist[2], imglist[0], imglist[3], imglist[1]], dim=2)
+    #img_tensor = torch.cat([imglist[2], imglist[0], imglist[3], imglist[1]], dim=2)
+    img_tensor = torch.cat([imglist[0], imglist[1], imglist[2], imglist[3]], dim=2)
     in_img = make_input_batch(img_tensor, device)
     in_img = ops.downsample(in_img,1)#2
     _, fov_out = net(in_img)
+   
     fov = torch.argmax(fov_out)
     fov_pred = fov.item() * 2
 
@@ -44,9 +46,10 @@ def estimate_fov(im_dir, model_name, device):
         img = cv2.imread(impath)
         imglist.append(generate_pad_img(img,fov_pred))
 
-    img_horiz = np.hstack([imglist[2], imglist[0], imglist[3], imglist[1]])
+    #img_horiz = np.hstack([imglist[2], imglist[0], imglist[3], imglist[1]])
+    img_horiz = np.hstack([imglist[0], imglist[1], imglist[2], imglist[3]])
     img_cat = np.vstack([np.zeros_like(img_horiz), img_horiz, np.zeros_like(img_horiz)])
-    #img_cat = utl.numpy_to_pano(img_cat)
+    img_cat = utl.numpy_to_pano(img_cat)
     outpath = os.path.join(im_dir, "img_out.jpg")
     cv2.imwrite(outpath, img_cat)
 
@@ -101,3 +104,8 @@ im_name = estimate_fov(imdir,'fov\\model_fov2_fov_2000', device)
 write_output_single(imdir, "trained_input.jpg",
                     model_name='model_190712\\model_n_medium_30000',
                     net_type='medium')
+
+#im_name = estimate_fov(imdir,'fov\\model_fov2_large_10000_2', device)
+#write_output_single(imdir, "trained_input.jpg",
+#                    model_name='model_190712\\model_n_medium_30000',
+#                    net_type='medium')
