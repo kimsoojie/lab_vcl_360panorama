@@ -10,7 +10,7 @@ import model.models as m
 import model.ops as ops
 import model.models3 as m3
 import time
-
+import convert.createEquiFromSquareFiles as c2e
 
 opt = Options(sys.argv[0])
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -30,6 +30,9 @@ def estimate_fov(im_dir, model_name, device):
     for i in range(4):
         impath = os.path.join(im_dir, "img" + str(i) + ".jpg")
         imglist.append(read_img_to_tensor(impath))
+        #img = cv2.imread(impath)
+        #crop = img[20:180,20:180]
+        #cv2.imwrite('.\\img\\_img'+str(i)+'.jpg',crop)
 
     #img_tensor = torch.cat([imglist[2], imglist[0], imglist[3], imglist[1]], dim=2)
     img_tensor = torch.cat([imglist[0], imglist[1], imglist[2], imglist[3]], dim=2)
@@ -44,14 +47,23 @@ def estimate_fov(im_dir, model_name, device):
     for i in range(4):
         impath = os.path.join(im_dir, "img" + str(i) + ".jpg")
         img = cv2.imread(impath)
-        imglist.append(generate_pad_img(img,fov_pred))
+        fov = generate_pad_img(img,fov_pred)
+        imglist.append(fov)
+        cv2.imwrite('.\\img\\fov\\img'+str(i)+'.jpg',fov)
+    
+    h,w,_ = imglist[0].shape
+    up = np.zeros((h, w, 3), np.uint8)
+    down = np.zeros((h,w, 3), np.uint8)
+    cv2.imwrite('.\\img\\fov\\posy.jpg', up)
+    cv2.imwrite('.\\img\\fov\\negy.jpg', down)
 
     #img_horiz = np.hstack([imglist[2], imglist[0], imglist[3], imglist[1]])
     img_horiz = np.hstack([imglist[0], imglist[1], imglist[2], imglist[3]])
     img_cat = np.vstack([np.zeros_like(img_horiz), img_horiz, np.zeros_like(img_horiz)])
-    img_cat = utl.numpy_to_pano(img_cat)
-    outpath = os.path.join(im_dir, "img_out.jpg")
-    cv2.imwrite(outpath, img_cat)
+    #img_cat = utl.numpy_to_pano(img_cat)
+    #outpath = os.path.join(im_dir, "img_out.jpg")
+    #cv2.imwrite(outpath, img_cat)
+    c2e.cube2equi()
 
 def write_output_single(folder_path, im_name, model_name, net_type=None):
     # Init network

@@ -38,6 +38,10 @@ def numpy_to_pano(in_img, out_h=512, out_w=1024, in_len=256):
 
     y = coord[:, :, 0]  # load the coordinate
     x = coord[:, :, 1]  # load the coordinate
+    
+    #y=np.array(y,dtype=int)
+    #x=np.array(x,dtype=int)
+
     out_img = in_img[y, x, :]
     return out_img
 
