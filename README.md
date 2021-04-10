@@ -5,7 +5,7 @@ Paper : https://arxiv.org/abs/1904.03326
 # pretrained model path   
 src/trained_model/fov/model_fov2_fov_2000.pt   
 src/trained_model/model_190712/model_n_medium_30000.pt   
-model download : https://drive.google.com/drive/u/1/folders/1nTFZ3uKNCeOrpMJvQe8ohcYWAdnT_AXf   
+model download : https://drive.google.com/drive/folders/1nTFZ3uKNCeOrpMJvQe8ohcYWAdnT_AXf?usp=sharing      
     
 # input path
 src/img/img0.jpg   
