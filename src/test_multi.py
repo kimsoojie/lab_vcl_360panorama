@@ -10,7 +10,7 @@ import model.models as m
 import model.ops as ops
 import model.models3 as m3
 import time
-import convert.createEquiFromSquareFiles as c2e
+from convert.createEquiFromSquareFiles import C2E
 
 opt = Options(sys.argv[0])
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -63,6 +63,7 @@ def estimate_fov(im_dir, model_name, device):
     #img_cat = utl.numpy_to_pano(img_cat)
     #outpath = os.path.join(im_dir, "img_out.jpg")
     #cv2.imwrite(outpath, img_cat)
+    c2e = C2E()
     c2e.cube2equi()
 
 def write_output_single(folder_path, im_name, model_name, net_type=None):
