@@ -117,8 +117,3 @@ im_name = estimate_fov(imdir,'fov\\model_fov2_fov_2000', device)
 write_output_single(imdir, "trained_input.jpg",
                     model_name='model_190712\\model_n_medium_30000',
                     net_type='medium')
-
-#im_name = estimate_fov(imdir,'fov\\model_fov2_large_10000_2', device)
-#write_output_single(imdir, "trained_input.jpg",
-#                    model_name='model_190712\\model_n_medium_30000',
-#                    net_type='medium')
