@@ -14,11 +14,12 @@ class PanoData(Dataset):
     def __getitem__(self, idx):
 
         sub_dir = 'pano_' + str(idx + 1)
-
+        sub_dir='pano_5993' #temp
+        print(sub_dir)
         """Standard"""
         # ----------
         in_img_cat = self._read_pano(sub_dir, prefix='trained_input_gt.jpg', scale=1.0)
-        gt_img_cat = self._read_pano(sub_dir, prefix='pano_*.jpg.jpg', scale=1.0) # pano groundtruth
+        gt_img_cat = self._read_pano(sub_dir, prefix='pano_*.jpg', scale=1.0) # pano groundtruth
         # in_img_cat = self._concat_img(sub_dir, prefix='new_img_')
         # in_img_cat = gt_img_cat
         fov = self._read_fov(sub_dir, prefix='fov.txt')
@@ -112,6 +113,7 @@ class PanoData(Dataset):
     def _read_pano(self, sub_dir, prefix='pano_', scale=1.0):
         im_path_ = os.path.join(self.root_dir, sub_dir, prefix)
         im_list = glob.glob(im_path_)
+        print(im_path_)
         img = self._imread(im_list[0])
         img_rsz = cv2.resize(img, (0,0), fx=scale, fy=scale)
         return img_rsz
