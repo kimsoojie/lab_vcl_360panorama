@@ -19,11 +19,22 @@ data_loader = Dataset('train',resize=opt.resize).load_data()
 
 
 # net = NetworksSegment(device, num_class=8)
-net = Networks(device, opt.net, loss='lsgan')
+
+# for panorama generation - networks (soojie)
+#net = Networks(device, 'small', loss='lsgan')
+#net = Networks(device, opt.net, loss='lsgan')
+
+# for fov estimation - networks2 (soojie)
+net = Networks2(device, 'train')
+
 net.set_phase('train')
 net.print_structure()
 # net.load_model_G('model_overlap_medium_4000_latest2', False)
-net.load_model('model_191017_medium_1000', True)
+
+# load model small, medium(soojie)
+#net.load_model('model_191017_medium_1000', True)
+
+
 # net.print_structure()
 # net.load_model('large_190723/model_190716_large_10000',True)
 # net.load_model_G('model_190712/model_n_medium_30000', gan=True, strict=False)
@@ -34,12 +45,12 @@ net.load_model('model_191017_medium_1000', True)
 # net.load_model_G('model_ul_large/model_ul_10000', False)
 
 
-# if opt.net == 'fov':
-#     forward_call = net.train_fov
-#     loss_call = net.compute_loss
-#     txt_summary_call = net.print_summary
-#     img_summary_call = net.write_img_summary
-if opt.net == 'small':
+if opt.net == 'fov':
+     forward_call = net.train_fov
+     loss_call = net.compute_loss
+     txt_summary_call = net.print_summary
+     img_summary_call = net.write_img_summary
+elif opt.net == 'small':
     forward_call = net.train_small
     loss_call = net.compute_loss_small
     txt_summary_call = net.print_summary_small

@@ -68,7 +68,7 @@ def estimate_fov(im_dir, model_name, device):
 
 def write_output_single(folder_path, im_name, model_name, net_type=None):
     # Init network
-    generator = m3.GM().to(device)
+    generator = m3.GM().to(device)    # (soojie): test GM, SM, LM
     generator.eval()
     model_path = os.path.join(opt.model_path, model_name + '.pt')
     model = torch.load(model_path)

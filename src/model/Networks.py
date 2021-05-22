@@ -21,14 +21,16 @@ class Networks():
         if net_type == 'small':
             self.prefix = 'small'
             self.Discriminator = m3.D1(6).to(device)
-            self.Generator = m3.GS().to(device)
-            # load initial weights
+            #self.Generator = m3.GS().to(device)
+            self.Generator = m3.GS # (soojie)
             self.Discriminator.apply(init_weights)
             self.Generator.apply(init_weights)
         elif net_type == 'medium':
             self.prefix = 'medium'
             self.Discriminator = m3.D1(6, loss=loss).to(device)
-            self.Generator = m3.GTestMobileStudent().to(device)
+            #self.Generator = m3.GM().to(device)
+            self.Generator = m3.GM() #(soojie)
+            #self.Generator = m3.GTestMobileStudent().to(device)
             # self.Generator.decompose_layer()
             self.Discriminator.apply(init_weights)
             self.Generator.apply(init_weights)
@@ -37,7 +39,8 @@ class Networks():
         elif net_type == 'large':
             self.prefix = 'large'
             self.Discriminator = m3.D1(6, loss=loss).to(device)
-            self.Generator = m3.GL2().to(device)
+            #self.Generator = m3.GL2().to(device)
+            self.Generator = m3.GL2() #(soojie)
             # self.Generator = m2.GeneratorLarge().to(device)
             self.Discriminator.apply(init_weights)
             self.Generator.apply(init_weights)

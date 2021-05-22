@@ -56,7 +56,8 @@ class Options:
         # =====================
 
     def _define_parser(self):
-        self.parser.add_argument('--net', default='small',
+        #self.parser.add_argument('--net', default='small', #(soojie)
+        self.parser.add_argument('--net', default='fov',
                                  help='Network type (small || medium || large')
 
     def _parse(self):
