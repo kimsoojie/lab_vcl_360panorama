@@ -13,7 +13,7 @@ class Options:
         # Dataset
         # =====================
         self.workers = 0
-        self.equi_coord = '.\\pano_coord_1024.npy'
+        self.equi_coord = '../data/pano_coord_1024.npy'
         self.equi = True
 
         # Training Param #
@@ -30,20 +30,20 @@ class Options:
         self.lr_g = 0.0001
         self.beta1 = 0.5
         self.beta2 = 0.999
-        self.total_epochs = 50
-        self.train_log = '.\\log'
+        self.total_epochs = 2000
+        self.train_log = '..\\log'
         self.print_step = 500
 
 
         # Test Param #
-        self.test_path = '.\\pano_data_val'
+        self.test_path = '.\\360dataset\\pano_data_val'
         self.test_batch = 1
         self.test_shuffle = False
         self.test_len = 5000
         self.output_path = '.\\output'
 
         # Val param #
-        self.val_path = '.\\pano_data_val'
+        self.val_path = '.\\360dataset\\pano_data_val'
         self.val_batch = 1
         self.val_shuffle = True
         self.val_len = 5000
@@ -56,8 +56,8 @@ class Options:
         # =====================
 
     def _define_parser(self):
-        #self.parser.add_argument('--net', default='small', #(soojie)
-        self.parser.add_argument('--net', default='fov',
+        self.parser.add_argument('--net', default='small',
+        #self.parser.add_argument('--net', default='fov',
                                  help='Network type (small || medium || large')
 
     def _parse(self):
