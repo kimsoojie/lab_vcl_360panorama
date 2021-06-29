@@ -56,8 +56,10 @@ class Options:
         # =====================
 
     def _define_parser(self):
-        self.parser.add_argument('--net', default='small',
-        #self.parser.add_argument('--net', default='fov',
+        self.parser.add_argument('--net', default='small', #soojie: train small net
+        #self.parser.add_argument('--net', default='medium', #soojie: train medium net
+        #self.parser.add_argument('--net', default='large', #soojie: train large net
+        #self.parser.add_argument('--net', default='fov',  #soojie: train fov
                                  help='Network type (small || medium || large')
 
     def _parse(self):

@@ -21,16 +21,14 @@ class Networks():
         if net_type == 'small':
             self.prefix = 'small'
             self.Discriminator = m3.D1(6).to(device)
-            #self.Generator = m3.GS().to(device)
-            self.Generator = m3.GS # (soojie)
+            self.Generator = m3.GS().to(device)
+            # load initial weights
             self.Discriminator.apply(init_weights)
             self.Generator.apply(init_weights)
         elif net_type == 'medium':
             self.prefix = 'medium'
             self.Discriminator = m3.D1(6, loss=loss).to(device)
-            #self.Generator = m3.GM().to(device)
-            self.Generator = m3.GM() #(soojie)
-            #self.Generator = m3.GTestMobileStudent().to(device)
+            self.Generator = m3.GM().to(device)
             # self.Generator.decompose_layer()
             self.Discriminator.apply(init_weights)
             self.Generator.apply(init_weights)
@@ -39,8 +37,7 @@ class Networks():
         elif net_type == 'large':
             self.prefix = 'large'
             self.Discriminator = m3.D1(6, loss=loss).to(device)
-            #self.Generator = m3.GL2().to(device)
-            self.Generator = m3.GL2() #(soojie)
+            self.Generator = m3.GL2().to(device)
             # self.Generator = m2.GeneratorLarge().to(device)
             self.Discriminator.apply(init_weights)
             self.Generator.apply(init_weights)
@@ -195,9 +192,9 @@ class Networks():
         self.loss_d_real = 0
         self.loss_d_fake = 0
         for i in range(len(self.d_out_real)):
-            self.loss_d_real += self.loss_fn_MSE(self.d_out_real[i], torch.ones_like(self.d_out_real[i]))
+            self.loss_d_real += self.loss_fn_GAN(self.d_out_real[i], torch.ones_like(self.d_out_real[i]))
             # self.loss_d_real += self.loss_fn_MSE(self.d_out_real[i][-1], torch.ones_like(self.d_out_real[i][-1]))
-            self.loss_d_fake += self.loss_fn_MSE(self.d_out_fake[i], torch.zeros_like(self.d_out_fake[i]))
+            self.loss_d_fake += self.loss_fn_GAN(self.d_out_fake[i], torch.zeros_like(self.d_out_fake[i]))
             # self.loss_d_fake += self.loss_fn_MSE(self.d_out_fake[i][-1], torch.zeros_like(self.d_out_fake[i][-1]))
         self.loss_d_total = (self.loss_d_real + self.loss_d_fake)
 
@@ -214,7 +211,7 @@ class Networks():
         self.loss_g_adv = 0
         self.loss_g_feats = 0
         for i in range(len(self.d_out_adv)):
-            self.loss_g_adv += self.loss_fn_BCE(self.d_out_adv[i], torch.ones_like(self.d_out_real[i]))
+            self.loss_g_adv += self.loss_fn_GAN(self.d_out_adv[i], torch.ones_like(self.d_out_real[i]))
             # self.loss_g_adv += self.loss_fn_MSE(self.d_out_adv[i][-1}, torch.ones_like(self.d_out_real[i][-1))
             # for j in range(3):
             #     self.loss_g_feats += 0.5 * 10 *self.loss_fn_feat(self.d_out_adv[i][j], self.d_out_real[i][j].detach())

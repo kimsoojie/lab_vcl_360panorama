@@ -1,4 +1,5 @@
 from util.base import *
+from util.utilities import numpy_to_pano
 import glob
 
 class PanoData(Dataset):
@@ -14,19 +15,24 @@ class PanoData(Dataset):
     def __getitem__(self, idx):
 
         sub_dir = 'pano_' + str(idx + 1)
-        sub_dir='pano_5993' #temp
-        print(sub_dir)
+
         """Standard"""
         # ----------
-        in_img_cat = self._read_pano(sub_dir, prefix='trained_input_gt.jpg', scale=1.0)
+        # in_img_cat = self._read_pano(sub_dir, prefix='pre_input45.jpg', scale=1.0)
+        
+        #for panorama generation
+        in_img_cat, fov = self._read_rand_img_pano(sub_dir, prefix='gt_') # generate random fov image
         gt_img_cat = self._read_pano(sub_dir, prefix='pano_*.jpg', scale=1.0) # pano groundtruth
+       
         # in_img_cat = self._concat_img(sub_dir, prefix='new_img_')
         # in_img_cat = gt_img_cat
-        fov = self._read_fov(sub_dir, prefix='fov.txt')
+        # fov = self._read_fov(sub_dir, prefix='fov.txt')
 
         """Random for FOV"""
         # --------------
-        # in_img_cat, gt_img_cat, fov = self._read_rand_img(sub_dir, prefix='gt_') # generate random fov image
+        in_img_cat, gt_img_cat, fov = self._read_rand_img(sub_dir, prefix='gt_') # generate random fov image
+        # cv2.imshow('img', gt_img_cat)
+        # cv2.waitKey(0)
 
         """Read Data from list"""
         # in_img_cat = self._imread(self.data_path[idx])
@@ -103,17 +109,32 @@ class PanoData(Dataset):
             img_path = os.path.join(self.root_dir, sub_dir, prefix + str(i+1) + '.jpg')
             im = self._imread(img_path)
             images.append(self.generate_crop_img(im, fov))
-            gts.append(self.generate_pad_img(im * 0 + 255, fov))
+            gts.append(self.generate_pad_img(im, fov))
 
         img_concat = np.hstack((images[2], images[0], images[3], images[1]))
         gt_concat = np.hstack((gts[2], gts[0], gts[3], gts[1]))
         fov = int(fov/2) # downsample image twice
         return img_concat, gt_concat, fov
 
+    def _read_rand_img_pano(self, sub_dir, prefix='gt_'):
+        images = []
+        gts = []
+        fov = self.generate_random_fov()
+
+        for i in range(4):
+            img_path = os.path.join(self.root_dir, sub_dir, prefix + str(i+1) + '.jpg')
+            im = self._imread(img_path)
+            gts.append(self.generate_pad_img(im, fov))
+
+        gt_concat = np.hstack((gts[2], gts[0], gts[3], gts[1]))
+        gt_concat_full = np.vstack((np.zeros_like(gt_concat), gt_concat, np.zeros_like(gt_concat)))
+        pano = numpy_to_pano(gt_concat_full)
+        fov = int(fov)
+        return pano, fov
+
     def _read_pano(self, sub_dir, prefix='pano_', scale=1.0):
         im_path_ = os.path.join(self.root_dir, sub_dir, prefix)
         im_list = glob.glob(im_path_)
-        print(im_path_)
         img = self._imread(im_list[0])
         img_rsz = cv2.resize(img, (0,0), fx=scale, fy=scale)
         return img_rsz
@@ -140,7 +161,7 @@ class PanoData(Dataset):
         return
 
     def generate_random_fov(self):
-        fov_range = np.arange(2,256,2)
+        fov_range = np.arange(128,192,2)
         np.random.shuffle(fov_range)
         return fov_range[0]
 
