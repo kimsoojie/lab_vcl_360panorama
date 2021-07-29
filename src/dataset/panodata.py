@@ -19,18 +19,15 @@ class PanoData(Dataset):
         """Standard"""
         # ----------
         # in_img_cat = self._read_pano(sub_dir, prefix='pre_input45.jpg', scale=1.0)
-        
-        #for panorama generation
         in_img_cat, fov = self._read_rand_img_pano(sub_dir, prefix='gt_') # generate random fov image
         gt_img_cat = self._read_pano(sub_dir, prefix='pano_*.jpg', scale=1.0) # pano groundtruth
-       
         # in_img_cat = self._concat_img(sub_dir, prefix='new_img_')
         # in_img_cat = gt_img_cat
         # fov = self._read_fov(sub_dir, prefix='fov.txt')
 
         """Random for FOV"""
         # --------------
-        in_img_cat, gt_img_cat, fov = self._read_rand_img(sub_dir, prefix='gt_') # generate random fov image
+        # in_img_cat, gt_img_cat, fov = self._read_rand_img(sub_dir, prefix='gt_') # generate random fov image
         # cv2.imshow('img', gt_img_cat)
         # cv2.waitKey(0)
 
@@ -123,6 +120,7 @@ class PanoData(Dataset):
 
         for i in range(4):
             img_path = os.path.join(self.root_dir, sub_dir, prefix + str(i+1) + '.jpg')
+            #print(img_path)
             im = self._imread(img_path)
             gts.append(self.generate_pad_img(im, fov))
 

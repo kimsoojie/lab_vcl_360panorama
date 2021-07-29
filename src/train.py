@@ -7,24 +7,9 @@ from model.Networks import Networks, Networks_Wnet, NetworksSegment
 from model.Networks2 import Networks2
 from model.ops import dstack
 import os
-
+import gc
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
-
-############################################################################
-# soojie
-# 1. train small net
-#    net = Networks(device, 'medium', loss='lsgan')   
-#    opt.net == 'small':
-#    opt.py: self.parser.add_argument('--net', default='small',
-#
-# 2. train medium / large net
-#    net = Networks(device, 'medium' / 'large', loss='lsgan')   
-#    net.load_model('model_210528_small_49' / 'medium', False)
-#    opt.net == 'medium':  / opt.net == 'large':
-#    opt.py: self.parser.add_argument('--net', default='medium' / 'large',
-############################################################################
 
 def main():
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -38,17 +23,14 @@ def main():
 
 
     # net = NetworksSegment(device, num_class=8)
-    #net = Networks2(device, 'train')
-
-    net = Networks(device, 'small', loss='lsgan')
-    #net = Networks(device, 'medium', loss='lsgan')
-    #net = Networks(device, 'large', loss='lsgan')
+    net = Networks(device, 'medium', loss='lsgan')
     net.set_phase('train')
     net.print_structure()
-    #net.load_model('model_210528_small_49', False)
-    #net.load_model('model_210528_medium_49', False)
 
+    net.load_model('model_depth_210729_14990_small_9', False)
+    
     # net.load_model_G('model_overlap_medium_4000_latest2', False)
+    # net.load_model('model_191017_medium_1000', True)
     # net.print_structure()
     # net.load_model('large_190723/model_190716_large_10000',True)
     # net.load_model_G('model_190712/model_n_medium_30000', gan=True, strict=False)
@@ -59,24 +41,22 @@ def main():
     # net.load_model_G('model_ul_large/model_ul_10000', False)
 
 
-    #if opt.net == 'fov':
-    #    forward_call = net.train_fov
-    #    loss_call = net.compute_loss
-    #    txt_summary_call = net.print_summary
-    #    img_summary_call = net.write_img_summary
-
-    if opt.net == 'small':
-        forward_call = net.train_small
-        loss_call = net.compute_loss_small
-        txt_summary_call = net.print_summary_small
-        img_summary_call = net.write_imgs_summary_small
+    # if opt.net == 'fov':
+    #     forward_call = net.train_fov
+    #     loss_call = net.compute_loss
+    #     txt_summary_call = net.print_summary
+    #     img_summary_call = net.write_img_summary
     
-    #if opt.net == 'medium':
-    #    forward_call = net.train_medium
-    #    loss_call = net.compute_loss_medium
+    #if opt.net == 'small':
+    #    forward_call = net.train_small
+    #    loss_call = net.compute_loss_small
     #    txt_summary_call = net.print_summary_small
-    #    img_summary_call = net.write_imgs_summary_medium
-
+    #    img_summary_call = net.write_imgs_summary_small
+    if opt.net == 'medium':
+        forward_call = net.train_medium
+        loss_call = net.compute_loss_medium
+        txt_summary_call = net.print_summary_small
+        img_summary_call = net.write_imgs_summary_medium
     #if opt.net == 'large':
     #    forward_call = net.train_large
     #    loss_call = net.compute_loss_large
@@ -85,11 +65,14 @@ def main():
 
     # mask = utl.create_mask_portion()
 
+    #gc.collect()
+    #torch.cuda.empty_cache()
+
     total_step = 0
     start = time.time()
     for epoch in range(opt.total_epochs):
         step = 0
-        net.save_model(epoch, 'model_191105_' + opt.net)
+        #net.save_model(epoch, 'model_210528_' + opt.net)
 
         for item in data_loader:
             mask = utl.create_mask_ul()
@@ -123,6 +106,7 @@ def main():
 
             end = time.time()
             elapsed = end - start
+            #txt_summary_call(epoch, step)
 
             # Print network loss
             # # Add Tensorboard summary
@@ -130,11 +114,14 @@ def main():
                 # net.write_scalars(step)
                 txt_summary_call(epoch, step) # net.print_summary_<type>(epoch, step)
                 print('Time elapsed', elapsed, 'seconds')
-            if step % 100 == 0:
-                img_summary_call(step) # net.write_imgs_summary_<type>(step)
+                #net.save_model(epoch, 'model_210528_' + opt.net)
+            #if step % 500 == 0:
+            #    img_summary_call(step) # net.write_imgs_summary_<type>(step)
+                #net.save_model(epoch, 'model_210716_' + opt.net)
                 # net.write_scalar_summary('train/L1', total_step)
-            # if step % 1000 == 0:
-            #     net.save_model(step, 'model_191105_' + opt.net)
+            #if step % 1000 == 0:
+            #    img_summary_call(step) # net.write_imgs_summary_<type>(step)
+                #net.save_model(step, 'model_210715_' + opt.net)
                 # validation
                 # val_idx = random.randint(1,4999)
                 # item = data_val[val_idx]
@@ -152,6 +139,7 @@ def main():
             step += 1
             total_step += 1
 
+    net.save_model(epoch, 'model_depth_210729_'+str(total_step)+'_' + opt.net)
     # Net = Networks(device, net_type=opt.net)
     # Net.set_phase('train')
     # Net.print_structure()

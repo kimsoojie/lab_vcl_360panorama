@@ -82,6 +82,7 @@ def write_output_single(folder_path, im_name, model_name, net_type=None):
     in_img = ops.downsample(in_img)
 
     out_s, out_m = generator(in_img)
+    #out_s = generator(in_img)
 
     # torchvision.utils.save_image(out_m, '/var/www/html/' + im_name_splt[0] + '_m.png', normalize=True)
     save_img_from_tensor(imdir + '\\trained_output.jpg', out_m)
@@ -113,9 +114,11 @@ def save_img_from_tensor(im_path, img_tensor):
     cv2.imwrite(im_path, img.astype(np.uint8))
 
 imdir = '.\\img'
-im_name = estimate_fov(imdir,'fov\\model_fov2_fov_2000', device)
+#im_name = estimate_fov(imdir,'fov\\model_fov2_fov_2000', device)
+im_name = estimate_fov(imdir,'model_210713_fov_1343', device)
 write_output_single(imdir, "trained_input.jpg",
-                    model_name='model_190712\\model_n_medium_30000',
+                    #model_name='model_190712\\model_n_medium_30000',
+                    model_name='model_depth_210729_14990_medium_9',
                     net_type='medium')
 
              

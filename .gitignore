@@ -1,3 +1,4 @@
 src/pano_data_train/
 src/depth_data_train/
 src/trained_model/
+src_old/

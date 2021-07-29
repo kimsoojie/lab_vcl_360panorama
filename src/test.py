@@ -247,7 +247,7 @@ def predict_FOV(folder_path, model_path):
 
 def generate_overlap(data_path='/home/juliussurya/work/360dataset/pano_data_val/', data_target=0, save_path='/home/juliussurya/workspace/360pano2/image_surveys/overlap1'):
     for i in range(1):
-        impath = os.path.join(data_path, 'pano_' + str(data_target), 'pano_*.jpg')
+        impath = os.path.join(data_path, 'pano_' + str(data_target), 'pano_*.jpg.jpg')
         print(impath)
         im_list = glob.glob(impath)[0]
         im = cv2.imread(im_list)
